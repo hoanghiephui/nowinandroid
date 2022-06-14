@@ -112,6 +112,7 @@ dependencies {
     implementation(libs.accompanist.flowlayout)
     implementation(libs.coil.kt)
     implementation(libs.coil.kt.svg)
+    implementation(libs.coil.kt.compose)
     implementation(libs.kotlinx.datetime)
 
     implementation(libs.androidx.compose.material3.windowSizeClass)

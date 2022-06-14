@@ -1,0 +1,52 @@
+/*
+ * Copyright 2022 The Android Open Source Project
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
+
+package com.blockchain.nft.explore.ui.compose
+
+import androidx.compose.foundation.Image
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
+import coil.compose.rememberAsyncImagePainter
+import com.blockchain.nft.explore.R
+
+@Composable
+fun CoinImage(
+    iconUrl: String?,
+    placeholder: Int? = null,
+    modifier: Modifier,
+    colorFilter: ColorFilter? = null
+) {
+    val fallback = placeholder ?: R.drawable.coin_placeholder
+    when {
+        iconUrl != null -> Image(
+            painter = rememberAsyncImagePainter(
+                model = iconUrl,
+                error = painterResource(fallback)
+            ),
+            contentDescription = null,
+            modifier = modifier,
+            colorFilter = colorFilter
+        )
+        else -> Image(
+            painter = painterResource(fallback),
+            contentDescription = null,
+            modifier = modifier,
+            colorFilter = colorFilter
+        )
+    }
+}
