@@ -24,7 +24,7 @@ plugins {
 }
 
 dependencies {
-    testImplementation(project(":core-testing"))
+    testImplementation(projects.coreTesting)
 
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)

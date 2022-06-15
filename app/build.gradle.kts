@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import com.google.samples.apps.nowinandroid.FlavorDimension
 import com.google.samples.apps.nowinandroid.Flavor
+import com.google.samples.apps.nowinandroid.FlavorDimension
 
 plugins {
     id("nowinandroid.android.application")
@@ -94,20 +94,20 @@ android {
 }
 
 dependencies {
-    implementation(project(":feature-author"))
-    implementation(project(":feature-interests"))
-    implementation(project(":feature-foryou"))
-    implementation(project(":feature-topic"))
+    implementation(projects.featureAuthor)
+    implementation(projects.featureInterests)
+    implementation(projects.featureForyou)
+    implementation(projects.featureTopic)
 
-    implementation(project(":core-ui"))
-    implementation(project(":core-navigation"))
+    implementation(projects.coreUi)
+    implementation(projects.coreNavigation)
 
-    implementation(project(":sync"))
+    implementation(projects.sync)
 
-    androidTestImplementation(project(":core-testing"))
-    androidTestImplementation(project(":core-datastore-test"))
-    androidTestImplementation(project(":core-data-test"))
-    androidTestImplementation(project(":core-network"))
+    androidTestImplementation(projects.coreTesting)
+    androidTestImplementation(projects.coreDatastoreTest)
+    androidTestImplementation(projects.coreDataTest)
+    androidTestImplementation(projects.coreNetwork)
 
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.appcompat)

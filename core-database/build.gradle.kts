@@ -38,7 +38,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":core-model"))
+    implementation(projects.coreModel)
 
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
@@ -50,5 +50,5 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
 
-    androidTestImplementation(project(":core-testing"))
+    androidTestImplementation(projects.coreTesting)
 }

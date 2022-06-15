@@ -66,6 +66,10 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
                     "debugImplementation",
                     libs.findLibrary("androidx.customview.poolingcontainer").get()
                 )
+
+                //add("implementation", project(":blockchain:core-model"))
+                //add("implementation", project(":blockchain:core-data"))
+                //add("implementation", project(":blockchain:core-network"))
             }
         }
     }

@@ -20,9 +20,9 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":core-common"))
-    implementation(project(":core-data"))
-    implementation(project(":core-model"))
+    implementation(projects.coreCommon)
+    implementation(projects.coreData)
+    implementation(projects.coreModel)
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)

@@ -21,7 +21,7 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":core-model"))
+    implementation(projects.coreModel)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.coil.kt)

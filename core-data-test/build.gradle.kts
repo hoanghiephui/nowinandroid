@@ -21,8 +21,8 @@ plugins {
 }
 
 dependencies {
-    api(project(":core-data"))
-    implementation(project(":core-testing"))
+    api(projects.coreData)
+    implementation(projects.coreTesting)
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)

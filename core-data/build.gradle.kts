@@ -23,14 +23,14 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":core-common"))
-    implementation(project(":core-model"))
-    implementation(project(":core-database"))
-    implementation(project(":core-datastore"))
-    implementation(project(":core-network"))
+    implementation(projects.coreCommon)
+    implementation(projects.coreModel)
+    implementation(projects.coreDatabase)
+    implementation(projects.coreDatastore)
+    implementation(projects.coreNetwork)
 
-    testImplementation(project(":core-testing"))
-    testImplementation(project(":core-datastore-test"))
+    testImplementation(projects.coreTesting)
+    testImplementation(projects.coreDatastoreTest)
 
     implementation(libs.kotlinx.datetime)
     implementation(libs.kotlinx.coroutines.android)

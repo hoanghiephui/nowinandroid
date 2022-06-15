@@ -28,10 +28,10 @@ android {
 }
 
 dependencies {
-    implementation(project(":core-common"))
-    implementation(project(":core-model"))
-    implementation(project(":core-data"))
-    implementation(project(":core-datastore"))
+    implementation(projects.coreCommon)
+    implementation(projects.coreModel)
+    implementation(projects.coreData)
+    implementation(projects.coreDatastore)
 
     implementation(libs.kotlinx.coroutines.android)
 
@@ -39,8 +39,8 @@ dependencies {
     implementation(libs.androidx.work.ktx)
     implementation(libs.hilt.ext.work)
 
-    testImplementation(project(":core-testing"))
-    androidTestImplementation(project(":core-testing"))
+    testImplementation(projects.coreTesting)
+    androidTestImplementation(projects.coreTesting)
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)

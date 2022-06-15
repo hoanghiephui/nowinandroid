@@ -22,6 +22,8 @@ plugins {
     id("jacoco")
     id("dagger.hilt.android.plugin")
     id("nowinandroid.spotless")
+    id("kotlinx-serialization")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -97,10 +99,10 @@ android {
 }
 
 dependencies {
-    implementation(project(":core-ui"))
-    implementation(project(":core-navigation"))
+    implementation(projects.coreUi)
+    implementation(projects.coreNavigation)
 
-    implementation(project(":sync"))
+    implementation(projects.sync)
 
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.appcompat)
@@ -118,4 +120,6 @@ dependencies {
     implementation(libs.androidx.compose.material3.windowSizeClass)
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.serialization.json)
 }

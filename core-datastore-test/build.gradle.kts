@@ -21,8 +21,8 @@ plugins {
 }
 
 dependencies {
-    api(project(":core-datastore"))
-    implementation(project(":core-testing"))
+    api(projects.coreDatastore)
+    implementation(projects.coreTesting)
 
     api(libs.androidx.dataStore.core)
 

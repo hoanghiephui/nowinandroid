@@ -28,10 +28,10 @@ secrets {
 }
 
 dependencies {
-    implementation(project(":core-common"))
-    implementation(project(":core-model"))
+    implementation(projects.coreCommon)
+    implementation(projects.coreModel)
 
-    testImplementation(project(":core-testing"))
+    testImplementation(projects.coreTesting)
 
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.serialization.json)
