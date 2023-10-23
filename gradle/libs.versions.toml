@@ -58,6 +58,9 @@ org-jetbrains-kotlin-android = "1.9.10"
 junit = "1.1.5"
 material = "1.10.0"
 androidx-constraintlayout = "1.0.1"
+mediaVersion = "1.6.0"
+commonslangVersion = "3.11"
+annotationVersion = "1.7.0"
 
 [libraries]
 accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }
@@ -141,6 +144,9 @@ room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
 androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "androidx-constraintlayout" }
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist" }
+androidx-media = {module = "androidx.media:media", version.ref = "mediaVersion"}
+apache-common = {module = "org.apache.commons:commons-lang3", version.ref = "commonslangVersion"}
+androidx-annotation = {module = "androidx.annotation:annotation", version.ref = "annotationVersion"}
 
 # Dependencies of the included build-logic
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
