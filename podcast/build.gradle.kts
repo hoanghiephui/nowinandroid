@@ -33,7 +33,8 @@ dependencies {
     implementation(projects.core.common)
     implementation(projects.core.ui)
     implementation(projects.core.designsystem)
-
+    implementation(libs.androidx.constraintlayout.compose)
+    implementation(libs.androidx.compose.material)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
@@ -48,4 +49,5 @@ dependencies {
     implementation(libs.androidx.profileinstaller)
     implementation(libs.kotlinx.coroutines.guava)
     implementation(libs.coil.kt)
+    implementation(libs.accompanist.systemuicontroller)
 }

@@ -21,4 +21,7 @@
     <string name="library">Library</string>
 
     <string name="not_connected">⚠️ You aren’t connected to the internet</string>
+
+    <string name="play">Play</string>
+    <string name="pause">Pause</string>
 </resources>

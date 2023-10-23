@@ -16,12 +16,21 @@
 
 package com.podcast.player.ui
 
+import android.content.res.Configuration
+import androidx.compose.animation.core.tween
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.SwipeableState
+import androidx.compose.material.rememberSwipeableState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -49,7 +58,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import kotlin.math.max
+import kotlin.math.min
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun rememberNiaAppState(
     windowSizeClass: WindowSizeClass,
@@ -57,7 +70,15 @@ fun rememberNiaAppState(
     userNewsResourceRepository: UserNewsResourceRepository,
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     navController: NavHostController = rememberNavController(),
+    swipeableState: SwipeableState<Int> = rememberSwipeableState(
+        initialValue = 0,
+        animationSpec = tween(),
+    ),
+    density: Density = LocalDensity.current,
+    configuration: Configuration = LocalConfiguration.current,
 ): NiaAppState {
+    val screenHeight = with(density) { configuration.screenHeightDp.dp.toPx() }
+    val swipeAreaHeight = screenHeight - SwipeAreaOffset
     NavigationTrackingSideEffect(navController)
     return remember(
         navController,
@@ -69,21 +90,30 @@ fun rememberNiaAppState(
         NiaAppState(
             navController,
             coroutineScope,
-            windowSizeClass,
             networkMonitor,
             userNewsResourceRepository,
+            swipeableState = swipeableState,
+            swipeAreaHeight = swipeAreaHeight,
         )
     }
 }
 
 @Stable
+@OptIn(ExperimentalMaterialApi::class)
 class NiaAppState(
     val navController: NavHostController,
-    val coroutineScope: CoroutineScope,
-    val windowSizeClass: WindowSizeClass,
+    private val coroutineScope: CoroutineScope,
     networkMonitor: NetworkMonitor,
     userNewsResourceRepository: UserNewsResourceRepository,
+    val swipeableState: SwipeableState<Int>,
+    val swipeAreaHeight: Float,
 ) {
+    private val swipeProgress @Composable get() = swipeableState.offset.value / -swipeAreaHeight
+    val motionProgress @Composable get() = max(0f, min(swipeProgress, 1f))
+    val anchors = mapOf(0f to 0, -swipeAreaHeight to 1)
+    val isPlayerOpened @Composable get() = swipeableState.currentValue == 1
+    fun openPlayer() = coroutineScope.launch { swipeableState.animateTo(1) }
+    fun closePlayer() = coroutineScope.launch { swipeableState.animateTo(0) }
     val currentDestination: NavDestination?
         @Composable get() = navController
             .currentBackStackEntryAsState().value?.destination
@@ -95,12 +125,6 @@ class NiaAppState(
             libraryRoute -> LIBRARY
             else -> null
         }
-
-    val shouldShowBottomBar: Boolean
-        get() = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
-
-    val shouldShowNavRail: Boolean
-        get() = !shouldShowBottomBar
 
     val isOffline = networkMonitor.isOnline
         .map(Boolean::not)
@@ -185,3 +209,5 @@ private fun NavigationTrackingSideEffect(navController: NavHostController) {
         }
     }
 }
+
+private const val SwipeAreaOffset = 400

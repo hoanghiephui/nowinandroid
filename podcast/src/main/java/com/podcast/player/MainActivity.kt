@@ -29,6 +29,7 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -36,6 +37,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.samples.apps.nowinandroid.core.data.repository.UserNewsResourceRepository
 import com.google.samples.apps.nowinandroid.core.data.util.NetworkMonitor
 import com.google.samples.apps.nowinandroid.core.designsystem.theme.NiaTheme
@@ -110,6 +112,12 @@ class MainActivity : ComponentActivity() {
                 onDispose {}
             }
 
+            val systemUiController = rememberSystemUiController()
+
+            LaunchedEffect(systemUiController, darkTheme) {
+                systemUiController.systemBarsDarkContentEnabled = !darkTheme
+            }
+
             CompositionLocalProvider {
                 NiaTheme(
                     darkTheme = darkTheme,
@@ -120,6 +128,16 @@ class MainActivity : ComponentActivity() {
                         networkMonitor = networkMonitor,
                         windowSizeClass = calculateWindowSizeClass(this),
                         userNewsResourceRepository = userNewsResourceRepository,
+                        onSetSystemBarsLightIcons = {
+                            if (!darkTheme) {
+                                systemUiController.systemBarsDarkContentEnabled = false
+                            }
+                        },
+                        onResetSystemBarsIcons = {
+                            if (!darkTheme) {
+                                systemUiController.systemBarsDarkContentEnabled = true
+                            }
+                        }
                     )
                 }
             }
