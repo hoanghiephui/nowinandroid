@@ -63,7 +63,9 @@ mediaVersion = "1.6.0"
 commonslangVersion = "3.11"
 annotationVersion = "1.7.0"
 commonsioVersion = "2.5"
-jsoupVersion = "1.15.1"
+jsoupVersion = "2.2.21"
+rxAndroidVersion = "2.1.1"
+rxJavaVersion = "2.2.21"
 
 [libraries]
 accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }
@@ -153,6 +155,8 @@ apache-common = {module = "org.apache.commons:commons-lang3", version.ref = "com
 androidx-annotation = {module = "androidx.annotation:annotation", version.ref = "annotationVersion"}
 commons-io = {module = "commons-io:commons-io", version.ref = "commonsioVersion"}
 jsoup = {module = "org.jsoup:jsoup", version.ref = "jsoupVersion"}
+rxjava2-rxandroid = {module = "io.reactivex.rxjava2:rxandroid", version.ref = "rxAndroidVersion"}
+rxjava2-rxjava = {module = "io.reactivex.rxjava2:rxjava", version.ref = "rxJavaVersion"}
 
 # Dependencies of the included build-logic
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
