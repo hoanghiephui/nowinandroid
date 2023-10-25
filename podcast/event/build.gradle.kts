@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 The Android Open Source Project
+ * Copyright 2023 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,15 @@
  * limitations under the License.
  */
 
-dependencyResolutionManagement {
-    repositories {
-        google()
-        mavenCentral()
-        maven { url = uri("https://jitpack.io") }
-    }
-    versionCatalogs {
-        create("libs") {
-            from(files("../gradle/libs.versions.toml"))
-        }
-    }
+plugins {
+    id("nowinandroid.android.library")
+}
+android {
+    namespace = "com.podcast.event"
 }
 
-rootProject.name = "build-logic"
-include(":convention")
+dependencies {
+    implementation(libs.androidx.core)
+    implementation(libs.androidx.annotation)
+    implementation(project(":podcast:model"))
+}

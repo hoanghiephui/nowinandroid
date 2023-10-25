@@ -20,6 +20,7 @@ pluginManagement {
         google()
         mavenCentral()
         gradlePluginPortal()
+        maven { url = uri("https://jitpack.io") }
     }
 }
 
@@ -28,6 +29,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven { url = uri("https://jitpack.io") }
     }
 }
 rootProject.name = "nowinandroid"
@@ -70,3 +72,10 @@ include(":podcast:net:download")
 include(":podcast:net:ssl")
 include(":podcast:net:sync:model")
 include(":podcast:net:sync:gpoddernet")
+include(":podcast:event")
+include(":podcast:playback:base")
+include(":podcast:playback:cast")
+include(":podcast:core-domain")
+include(":podcast:net:discovery")
+include(":podcast:core")
+include(":podcast:storage:database")

@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.samples.apps.nowinandroid.core.designsystem.component.NiaBackground
 
 @Composable
 fun FullPlayer(
@@ -30,6 +31,10 @@ fun FullPlayer(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    NiaBackground {
+
+    }
+
     LaunchedEffect(isPlayerOpened, onSetSystemBarsLightIcons, onResetSystemBarsIcons) {
         if (isPlayerOpened) onSetSystemBarsLightIcons() else onResetSystemBarsIcons()
     }
