@@ -17,9 +17,35 @@
 package com.podcast.player.feature.explore
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.podcast.core.domain.usecase.GetListDiscoveryUseCase
+import com.podcast.core.storage.DBReader
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
-class ExploreViewModel @Inject constructor() : ViewModel() {
+class ExploreViewModel @Inject constructor(
+    getListDiscoveryUseCase: GetListDiscoveryUseCase,
+) : ViewModel() {
+
+    val uiState =
+        getListDiscoveryUseCase(
+            Locale.getDefault().country,
+            NUM_SUGGESTIONS,
+            DBReader.getFeedList(),
+        ).map {
+            ExploreUiState.Success(it)
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = ExploreUiState.Loading,
+        )
+
+    companion object {
+        private const val NUM_SUGGESTIONS = 12
+    }
 }

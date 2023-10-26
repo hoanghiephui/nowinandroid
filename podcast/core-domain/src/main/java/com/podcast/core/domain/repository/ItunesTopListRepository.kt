@@ -14,23 +14,16 @@
  * limitations under the License.
  */
 
-plugins {
-    id("nowinandroid.android.library")
-    id("nowinandroid.android.hilt")
-    kotlin("kapt")
-}
+package com.podcast.core.domain.repository
 
-android {
-    namespace = "com.podcast.core.domain"
-}
+import com.podcast.model.feed.Feed
+import com.podcast.net.discovery.PodcastSearchResult
+import kotlinx.coroutines.flow.Flow
 
-dependencies {
-    implementation(projects.podcast.model)
-    implementation(projects.podcast.core)
-    api(projects.podcast.net.discovery)
-    implementation(projects.core.model)
-    implementation(libs.hilt.android)
-    implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.kotlinx.datetime)
-    implementation(projects.core.common)
+interface ItunesTopListRepository {
+    fun loadTopList(
+        countryCode: String,
+        numberSuggest: Int,
+        subscribed: List<Feed>,
+    ): Flow<List<PodcastSearchResult>>
 }

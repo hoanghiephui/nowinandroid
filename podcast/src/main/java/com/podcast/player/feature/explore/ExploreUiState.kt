@@ -14,23 +14,14 @@
  * limitations under the License.
  */
 
-plugins {
-    id("nowinandroid.android.library")
-    id("nowinandroid.android.hilt")
-    kotlin("kapt")
-}
+package com.podcast.player.feature.explore
 
-android {
-    namespace = "com.podcast.core.domain"
-}
+import com.podcast.net.discovery.PodcastSearchResult
 
-dependencies {
-    implementation(projects.podcast.model)
-    implementation(projects.podcast.core)
-    api(projects.podcast.net.discovery)
-    implementation(projects.core.model)
-    implementation(libs.hilt.android)
-    implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.kotlinx.datetime)
-    implementation(projects.core.common)
+sealed interface ExploreUiState {
+    data object Loading : ExploreUiState
+
+    data class Success(
+        val discovers: List<PodcastSearchResult>,
+    ) : ExploreUiState
 }

@@ -37,6 +37,7 @@ dependencies {
     implementation(projects.core.ui)
     implementation(projects.core.designsystem)
     implementation(projects.podcast.core)
+    implementation(projects.podcast.coreDomain)
 
 
     implementation(libs.androidx.constraintlayout.compose)

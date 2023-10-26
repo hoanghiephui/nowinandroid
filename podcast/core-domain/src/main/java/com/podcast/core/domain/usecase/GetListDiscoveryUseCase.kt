@@ -14,23 +14,20 @@
  * limitations under the License.
  */
 
-plugins {
-    id("nowinandroid.android.library")
-    id("nowinandroid.android.hilt")
-    kotlin("kapt")
-}
+package com.podcast.core.domain.usecase
 
-android {
-    namespace = "com.podcast.core.domain"
-}
+import com.podcast.core.domain.repository.ItunesTopListRepository
+import com.podcast.model.feed.Feed
+import javax.inject.Inject
 
-dependencies {
-    implementation(projects.podcast.model)
-    implementation(projects.podcast.core)
-    api(projects.podcast.net.discovery)
-    implementation(projects.core.model)
-    implementation(libs.hilt.android)
-    implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.kotlinx.datetime)
-    implementation(projects.core.common)
+class GetListDiscoveryUseCase @Inject constructor(
+    private val itunesTopListRepository: ItunesTopListRepository,
+) {
+    operator fun invoke(
+        countryCode: String,
+        numberSuggest: Int,
+        subscribed: List<Feed>,
+    ) = itunesTopListRepository.loadTopList(
+        countryCode, numberSuggest, subscribed,
+    )
 }

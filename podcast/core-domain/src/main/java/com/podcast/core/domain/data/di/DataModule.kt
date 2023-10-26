@@ -14,23 +14,18 @@
  * limitations under the License.
  */
 
-plugins {
-    id("nowinandroid.android.library")
-    id("nowinandroid.android.hilt")
-    kotlin("kapt")
-}
+package com.podcast.core.domain.data.di
 
-android {
-    namespace = "com.podcast.core.domain"
-}
+import com.podcast.core.domain.data.repository.ItunesTopListRepositoryImpl
+import com.podcast.core.domain.repository.ItunesTopListRepository
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
-dependencies {
-    implementation(projects.podcast.model)
-    implementation(projects.podcast.core)
-    api(projects.podcast.net.discovery)
-    implementation(projects.core.model)
-    implementation(libs.hilt.android)
-    implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.kotlinx.datetime)
-    implementation(projects.core.common)
+@Module
+@InstallIn(SingletonComponent::class)
+interface DataModule {
+    @Binds
+    fun bindItunesTopListRepository(itunesTopListRepositoryImpl: ItunesTopListRepositoryImpl): ItunesTopListRepository
 }

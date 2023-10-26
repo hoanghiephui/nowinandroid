@@ -14,23 +14,22 @@
  * limitations under the License.
  */
 
-plugins {
-    id("nowinandroid.android.library")
-    id("nowinandroid.android.hilt")
-    kotlin("kapt")
-}
+package com.podcast.core.domain.data.di
 
-android {
-    namespace = "com.podcast.core.domain"
-}
+import android.content.Context
+import com.podcast.net.discovery.ItunesTopListLoader
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
-dependencies {
-    implementation(projects.podcast.model)
-    implementation(projects.podcast.core)
-    api(projects.podcast.net.discovery)
-    implementation(projects.core.model)
-    implementation(libs.hilt.android)
-    implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.kotlinx.datetime)
-    implementation(projects.core.common)
+@Module
+@InstallIn(SingletonComponent::class)
+object MediaStoreModule {
+    @Provides
+    @Singleton
+    fun provideItunesTopListLoader(@ApplicationContext context: Context): ItunesTopListLoader =
+        ItunesTopListLoader(context)
 }
