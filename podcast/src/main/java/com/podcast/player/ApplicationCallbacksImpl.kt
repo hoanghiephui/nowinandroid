@@ -17,29 +17,9 @@
 package com.podcast.player
 
 import android.app.Application
-import coil.ImageLoader
-import coil.ImageLoaderFactory
 import com.podcast.core.ApplicationCallbacks
-import com.podcast.core.ClientConfig
-import com.podcast.core.ClientConfigurator
-import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
-import javax.inject.Provider
 
-@HiltAndroidApp
-class PodcastApplication : Application(), ImageLoaderFactory {
-    @Inject
-    lateinit var imageLoader: Provider<ImageLoader>
-
-    @Inject
-    lateinit var applicationCallbacks: ApplicationCallbacks
-
-    override fun onCreate() {
-        super.onCreate()
-        ClientConfig.USER_AGENT = "Podcasts/" + BuildConfig.VERSION_NAME
-        ClientConfig.applicationCallbacks = applicationCallbacks
-        ClientConfigurator.initialize(this)
-    }
-
-    override fun newImageLoader(): ImageLoader = imageLoader.get()
+class ApplicationCallbacksImpl @Inject constructor(private val application: Application) : ApplicationCallbacks {
+    override fun getApplicationInstance(): Application = application
 }

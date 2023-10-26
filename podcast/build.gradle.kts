@@ -25,6 +25,9 @@ android {
             )
         }
     }
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 dependencies {
@@ -33,6 +36,9 @@ dependencies {
     implementation(projects.core.common)
     implementation(projects.core.ui)
     implementation(projects.core.designsystem)
+    implementation(projects.podcast.core)
+
+
     implementation(libs.androidx.constraintlayout.compose)
     implementation(libs.androidx.compose.material)
     implementation(libs.androidx.activity.compose)
