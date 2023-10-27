@@ -30,20 +30,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.sizeIn
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridCells.Fixed
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridScope
@@ -66,13 +61,15 @@ import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.samples.apps.nowinandroid.core.designsystem.component.NiaButton
+import com.google.samples.apps.nowinandroid.core.designsystem.component.NiaOutlinedButton
 import com.google.samples.apps.nowinandroid.core.designsystem.component.NiaOverlayLoadingWheel
 import com.google.samples.apps.nowinandroid.core.designsystem.component.PodCard
 import com.google.samples.apps.nowinandroid.core.designsystem.component.SingleLineText
 import com.google.samples.apps.nowinandroid.core.designsystem.component.scrollbar.scrollbarState
 import com.google.samples.apps.nowinandroid.core.designsystem.icon.NiaIcons
-import com.google.samples.apps.nowinandroid.core.designsystem.theme.spacing
 import com.podcast.net.discovery.PodcastSearchResult
+import com.podcast.core.R
 import com.podcast.player.feature.explore.ExploreUiState.Loading
 import com.podcast.player.feature.explore.ExploreUiState.Success
 import com.podcast.player.ui.component.PodArtworkImage
@@ -100,7 +97,7 @@ private fun ExploreScreen(
         columns = Adaptive(300.dp),
         contentPadding = PaddingValues(16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
-        verticalItemSpacing = 24.dp,
+        verticalItemSpacing = 12.dp,
         modifier = modifier,
         state = state,
     ) {
@@ -128,12 +125,24 @@ fun LazyStaggeredGridScope.discoveryFeed(
 ) {
     item(span = StaggeredGridItemSpan.FullLine, contentType = "discovery") {
         Column(modifier = modifier) {
-            SingleLineText(
-                text = "Discover",
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-            Discovery(stateUI, modifier)
+            Row(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                SingleLineText(
+                    text = stringResource(id = R.string.discover),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.weight(1f),
+                )
+                NiaButton(onClick = {}) {
+                    Text(text = stringResource(id = R.string.discover_more))
+                }
+            }
+
+            Discovery(stateUI)
         }
 
     }
@@ -142,12 +151,10 @@ fun LazyStaggeredGridScope.discoveryFeed(
 @Composable
 fun Discovery(
     stateUI: ExploreUiState,
-    modifier: Modifier,
 ) {
     val lazyGridState = rememberLazyGridState()
     Box(
-        modifier = modifier
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
     ) {
         when (stateUI) {
             Loading -> {
@@ -157,41 +164,58 @@ fun Discovery(
                         .padding(top = 8.dp),
                 ) {
                     NiaOverlayLoadingWheel(
-                        modifier = Modifier
-                            .align(Alignment.Center),
+                        modifier = Modifier.align(Alignment.Center),
                         contentDesc = "loading",
                     )
                 }
             }
-            is Success -> {
-                LazyHorizontalGrid(
-                    state = lazyGridState,
-                    rows = Fixed(1),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                    contentPadding = PaddingValues(24.dp),
-                    modifier = Modifier
-                        // LazyHorizontalGrid has to be constrained in height.
-                        // However, we can't set a fixed height because the horizontal grid contains
-                        // vertical text that can be rescaled.
-                        // When the fontScale is at most 1, we know that the horizontal grid will be at most
-                        // 240dp tall, so this is an upper bound for when the font scale is at most 1.
-                        // When the fontScale is greater than 1, the height required by the text inside the
-                        // horizontal grid will increase by at most the same factor, so 240sp is a valid
-                        // upper bound for how much space we need in that case.
-                        // The maximum of these two bounds is therefore a valid upper bound in all cases.
-                        .heightIn(max = max(180.dp, with(LocalDensity.current) { 180.sp.toDp() }))
-                        .fillMaxWidth()
-                ) {
-                    items(items = stateUI.discovers, key = PodcastSearchResult::title) { discover ->
-                        DiscoverItem(
-                            discovers = discover,
-                            onClick = {
 
-                            },
+            is Success -> {
+                Column {
+                    LazyHorizontalGrid(
+                        state = lazyGridState,
+                        rows = Fixed(1),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        //verticalArrangement = Arrangement.spacedBy(12.dp),
+                        contentPadding = PaddingValues(12.dp),
+                        modifier = Modifier
+                            // LazyHorizontalGrid has to be constrained in height.
+                            // However, we can't set a fixed height because the horizontal grid contains
+                            // vertical text that can be rescaled.
+                            // When the fontScale is at most 1, we know that the horizontal grid will be at most
+                            // 240dp tall, so this is an upper bound for when the font scale is at most 1.
+                            // When the fontScale is greater than 1, the height required by the text inside the
+                            // horizontal grid will increase by at most the same factor, so 240sp is a valid
+                            // upper bound for how much space we need in that case.
+                            // The maximum of these two bounds is therefore a valid upper bound in all cases.
+                            .heightIn(
+                                max = max(
+                                    160.dp,
+                                    with(LocalDensity.current) { 160.sp.toDp() }
+                                )
+                            )
+                            .fillMaxWidth(),
+                    ) {
+                        items(items = stateUI.discovers, key = PodcastSearchResult::title) { discover ->
+                            DiscoverItem(
+                                discovers = discover,
+                                onClick = {
+
+                                },
+                            )
+                        }
+                    }
+                    Row {
+                        Spacer(modifier = Modifier.weight(1f))
+                        SingleLineText(
+                            text = stringResource(id = R.string.discover_powered_by_itunes),
+                            style = MaterialTheme.typography.labelSmall,
+                            modifier = Modifier.padding(end = 8.dp)
                         )
                     }
+
                 }
+
             }
         }
         AnimatedVisibility(
@@ -209,8 +233,7 @@ fun Discovery(
                     .padding(top = 8.dp),
             ) {
                 NiaOverlayLoadingWheel(
-                    modifier = Modifier
-                        .align(Alignment.Center),
+                    modifier = Modifier.align(Alignment.Center),
                     contentDesc = "loading",
                 )
             }
@@ -225,17 +248,11 @@ private fun DiscoverItem(
     modifier: Modifier = Modifier,
 ) {
     PodCard(modifier = modifier, onClick = onClick) {
-        Column(
-            modifier = Modifier.padding(MaterialTheme.spacing.smallMedium),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
-        ) {
-            PodArtworkImage(
-                modifier = Modifier.aspectRatio(1f),
-                artworkUri = Uri.parse(discovers.imageUrl),
-                contentDescription = discovers.title,
-            )
-        }
+        PodArtworkImage(
+            modifier = Modifier.aspectRatio(1f),
+            artworkUri = Uri.parse(discovers.imageUrl),
+            contentDescription = discovers.title,
+        )
     }
 }
 
