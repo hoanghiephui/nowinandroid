@@ -81,9 +81,9 @@ public class HttpDownloader extends Downloader {
             }
 
             // add range header if necessary
-            if (fileExists && destination.length() > 0) {
-                request.setSoFar(destination.length());
-                httpReq.addHeader("Range", "bytes=" + request.getSoFar() + "-");
+            if (fileExists && destination.length() > 0) {//todo xem laij cai nay
+                //request.setSoFar(destination.length());
+                //httpReq.addHeader("Range", "bytes=" + request.getSoFar() + "-");
                 Log.d(TAG, "Adding range header: " + request.getSoFar());
             }
 

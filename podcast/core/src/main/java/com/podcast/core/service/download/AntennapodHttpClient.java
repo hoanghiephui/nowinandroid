@@ -11,6 +11,7 @@ import okhttp3.Cache;
 import okhttp3.Credentials;
 import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 
 import java.io.File;
 import java.net.*;
@@ -59,9 +60,11 @@ public class AntennapodHttpClient {
         Log.d(TAG, "Creating new instance of HTTP client");
 
         System.setProperty("http.maxConnections", String.valueOf(MAX_CONNECTIONS));
-
+        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS);
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.interceptors().add(new BasicAuthorizationInterceptor());
+        builder.interceptors().add(httpLoggingInterceptor);
         builder.networkInterceptors().add(new UserAgentInterceptor());
 
         // set cookie handler

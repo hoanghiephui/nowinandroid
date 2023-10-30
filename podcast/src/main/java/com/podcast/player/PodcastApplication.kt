@@ -36,7 +36,7 @@ class PodcastApplication : Application(), ImageLoaderFactory {
 
     override fun onCreate() {
         super.onCreate()
-        ClientConfig.USER_AGENT = "Podcasts/" + BuildConfig.VERSION_NAME
+        ClientConfig.USER_AGENT = "AntennaPod/" + BuildConfig.VERSION_NAME
         ClientConfig.applicationCallbacks = applicationCallbacks
         ClientConfigurator.initialize(this)
     }

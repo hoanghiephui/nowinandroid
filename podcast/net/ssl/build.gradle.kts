@@ -23,7 +23,7 @@ android {
 
 dependencies {
     implementation(libs.androidx.annotation)
-    implementation(libs.okhttp.logging)
+    implementation(libs.okhttp)
     implementation("com.google.android.gms:play-services-base:18.2.0")
     implementation("org.conscrypt:conscrypt-android:2.5.2")
 }

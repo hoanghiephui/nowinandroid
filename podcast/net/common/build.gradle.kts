@@ -23,5 +23,5 @@ android {
 
 dependencies {
     implementation(libs.androidx.annotation)
-    implementation(libs.okhttp.logging)
+    implementation(libs.okhttp)
 }

@@ -33,6 +33,7 @@ dependencies {
     implementation(projects.podcast.storage.preferences)
 
     implementation(libs.okhttp)
+    implementation(libs.okhttp.logging)
     implementation(libs.okhttp.urlconnection)
     implementation(libs.okio)
     implementation(libs.androidx.annotation)

@@ -32,7 +32,7 @@ dependencies {
     implementation("com.github.mfietz:fyydlin:v0.5.0")
     implementation(libs.rxjava2.rxjava)
     implementation(libs.rxjava2.rxandroid)
-    implementation(libs.okhttp.logging)
+    implementation(libs.okhttp)
     implementation(libs.kotlinx.coroutines.android)
 
 }
