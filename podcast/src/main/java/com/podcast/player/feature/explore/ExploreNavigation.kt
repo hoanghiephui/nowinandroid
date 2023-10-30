@@ -32,6 +32,6 @@ fun NavGraphBuilder.exploreScreen(
     onShowSnackbar: suspend (String, String?) -> Boolean,
 ) {
     composable(route = exploreRoute) {
-        ExploreRouter()
+        ExploreRouter(onClick = onTopicClick)
     }
 }

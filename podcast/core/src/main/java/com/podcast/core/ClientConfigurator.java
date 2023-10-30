@@ -5,6 +5,7 @@ import com.podcast.core.service.download.AntennapodHttpClient;
 import com.podcast.net.download.DownloadServiceInterface;
 import com.podcast.net.ssl.SslProviderInstaller;
 import com.podcast.storage.database.PodDBAdapter;
+import com.podcast.storage.preferences.UserPreferences;
 
 import java.io.File;
 
@@ -16,7 +17,7 @@ public class ClientConfigurator {
             return;
         }
         PodDBAdapter.init(context);
-        //UserPreferences.init(context);
+        UserPreferences.init(context);
         //UsageStatistics.init(context);
         //PlaybackPreferences.init(context);
         SslProviderInstaller.install(context);
@@ -25,7 +26,7 @@ public class ClientConfigurator {
         //DownloadServiceInterface.setImpl(new DownloadServiceInterfaceImpl());
         //SynchronizationQueueSink.setServiceStarterImpl(() -> SyncService.sync(context));
         AntennapodHttpClient.setCacheDirectory(new File(context.getCacheDir(), "okhttp"));
-        //AntennapodHttpClient.setProxyConfig(UserPreferences.getProxyConfig());
+        AntennapodHttpClient.setProxyConfig(UserPreferences.getProxyConfig());
         //SleepTimerPreferences.init(context);
         //NotificationUtils.createChannels(context);
         initialized = true;

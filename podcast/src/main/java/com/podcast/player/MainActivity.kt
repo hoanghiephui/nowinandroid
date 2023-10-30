@@ -56,8 +56,10 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     val viewModel: MainActivityViewModel by viewModels()
+
     @Inject
     lateinit var networkMonitor: NetworkMonitor
+
     @Inject
     lateinit var userNewsResourceRepository: UserNewsResourceRepository
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -137,7 +139,8 @@ class MainActivity : ComponentActivity() {
                             if (!darkTheme) {
                                 systemUiController.systemBarsDarkContentEnabled = true
                             }
-                        }
+                        },
+                        viewModel = viewModel,
                     )
                 }
             }

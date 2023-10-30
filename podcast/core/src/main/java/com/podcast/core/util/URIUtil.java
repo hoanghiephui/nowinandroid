@@ -6,6 +6,8 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Utility methods for dealing with URL encoding.
@@ -28,5 +30,22 @@ public class URIUtil {
         } catch (MalformedURLException | URISyntaxException e) {
             throw new IllegalArgumentException(e);
         }
+    }
+
+    private static final String REGEX_PATTERN_IP_ADDRESS = "([0-9]{1,3}[\\.]){3}[0-9]{1,3}";
+    public static boolean wasDownloadBlocked(Throwable throwable) {
+        String message = throwable.getMessage();
+        if (message != null) {
+            Pattern pattern = Pattern.compile(REGEX_PATTERN_IP_ADDRESS);
+            Matcher matcher = pattern.matcher(message);
+            if (matcher.find()) {
+                String ip = matcher.group();
+                return ip.startsWith("127.") || ip.startsWith("0.");
+            }
+        }
+        if (throwable.getCause() != null) {
+            return wasDownloadBlocked(throwable.getCause());
+        }
+        return false;
     }
 }

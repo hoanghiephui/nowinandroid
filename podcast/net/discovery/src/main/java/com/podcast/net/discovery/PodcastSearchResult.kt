@@ -17,7 +17,7 @@ class PodcastSearchResult private constructor(
     /**
      * URL of the podcast feed
      */
-    val feedUrl: String?,
+    val feedUrl: String,
     /**
      * artistName of the podcast feed
      */

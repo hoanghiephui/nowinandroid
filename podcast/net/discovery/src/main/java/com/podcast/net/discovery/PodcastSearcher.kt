@@ -14,25 +14,17 @@
  * limitations under the License.
  */
 
-plugins {
-    id("nowinandroid.android.library")
-    kotlin("kapt")
-}
+package com.podcast.net.discovery
 
-android {
-    namespace = "com.podcast.net.discovery"
-}
+import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
 
-dependencies {
-    implementation(projects.podcast.model)
-    implementation(projects.podcast.net.sync.model)
-    implementation(projects.podcast.core)
-    implementation(projects.podcast.net.sync.gpoddernet)
-    implementation(libs.androidx.annotation)
-    implementation("com.github.mfietz:fyydlin:v0.5.0")
-    implementation(libs.rxjava2.rxjava)
-    implementation(libs.rxjava2.rxandroid)
-    implementation(libs.okhttp.logging)
-    implementation(libs.kotlinx.coroutines.android)
+interface PodcastSearcher {
+    suspend fun search(query: String): Flow<List<PodcastSearchResult>>
 
+    suspend fun lookupUrl(resultUrl: String): Flow<String>
+
+    fun urlNeedsLookup(resultUrl: String): Boolean
+
+    fun getName(): String
 }

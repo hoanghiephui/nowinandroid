@@ -23,16 +23,31 @@ import com.google.samples.apps.nowinandroid.core.model.data.UserData
 import com.podcast.player.MainActivityUiState.Loading
 import com.podcast.player.MainActivityUiState.Success
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
     userDataRepository: UserDataRepository,
 ) : ViewModel() {
+    private val _stateOpenFeed = MutableSharedFlow<String>()
+    val stateOpenFeed = _stateOpenFeed.asSharedFlow().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = null,
+    )
+    fun openFeedView(url: String) {
+        viewModelScope.launch {
+            _stateOpenFeed.emit(url)
+        }
+    }
+
     val uiState: StateFlow<MainActivityUiState> = userDataRepository.userData.map {
         Success(it)
     }.stateIn(

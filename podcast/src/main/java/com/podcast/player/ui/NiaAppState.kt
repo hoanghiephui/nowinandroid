@@ -22,7 +22,6 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.SwipeableState
 import androidx.compose.material.rememberSwipeableState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
@@ -76,6 +75,7 @@ fun rememberNiaAppState(
     ),
     density: Density = LocalDensity.current,
     configuration: Configuration = LocalConfiguration.current,
+    openFeedView: (feedUrl: String) -> Unit
 ): NiaAppState {
     val screenHeight = with(density) { configuration.screenHeightDp.dp.toPx() }
     val swipeAreaHeight = screenHeight - SwipeAreaOffset
@@ -94,6 +94,7 @@ fun rememberNiaAppState(
             userNewsResourceRepository,
             swipeableState = swipeableState,
             swipeAreaHeight = swipeAreaHeight,
+            openFeed = openFeedView
         )
     }
 }
@@ -107,6 +108,7 @@ class NiaAppState(
     userNewsResourceRepository: UserNewsResourceRepository,
     val swipeableState: SwipeableState<Int>,
     val swipeAreaHeight: Float,
+    val openFeed: (feedUrl: String) -> Unit
 ) {
     private val swipeProgress @Composable get() = swipeableState.offset.value / -swipeAreaHeight
     val motionProgress @Composable get() = max(0f, min(swipeProgress, 1f))
@@ -189,6 +191,10 @@ class NiaAppState(
 
     fun navigateToSearch() {
         //navController.navigateToSearch()
+    }
+
+    fun openFeedView(feedUrl: String) {
+        openFeed.invoke(feedUrl)
     }
 }
 

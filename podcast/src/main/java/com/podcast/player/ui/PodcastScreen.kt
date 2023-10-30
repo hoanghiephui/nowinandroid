@@ -27,14 +27,12 @@ import androidx.compose.material.swipeable
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SnackbarDuration.Indefinite
 import androidx.compose.material3.SnackbarDuration.Short
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult.ActionPerformed
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -68,8 +66,10 @@ import com.google.samples.apps.nowinandroid.core.designsystem.component.NiaTopAp
 import com.google.samples.apps.nowinandroid.core.designsystem.icon.NiaIcons
 import com.google.samples.apps.nowinandroid.core.designsystem.theme.GradientColors
 import com.google.samples.apps.nowinandroid.core.designsystem.theme.LocalGradientColors
+import com.podcast.player.MainActivityViewModel
 import com.podcast.player.R
 import com.podcast.player.R.string
+import com.podcast.player.feature.feedview.OnlineFeedView
 import com.podcast.player.feature.player.FullPlayer
 import com.podcast.player.feature.player.mini.MiniPlayer
 import com.podcast.player.navigation.PodcastNavHost
@@ -87,16 +87,27 @@ fun PodcastApp(
     userNewsResourceRepository: UserNewsResourceRepository,
     onSetSystemBarsLightIcons: () -> Unit,
     onResetSystemBarsIcons: () -> Unit,
+    viewModel: MainActivityViewModel,
     appState: NiaAppState = rememberNiaAppState(
         networkMonitor = networkMonitor,
         windowSizeClass = windowSizeClass,
         userNewsResourceRepository = userNewsResourceRepository,
+        openFeedView = {
+            viewModel.openFeedView(it)
+        },
     ),
     context: Context = LocalContext.current,
 ) {
     val shouldShowGradientBackground =
         appState.currentTopLevelDestination == TopLevelDestination.FOR_YOU
-
+    val stateOpenFeed by viewModel.stateOpenFeed.collectAsStateWithLifecycle()
+    var showFeedView by remember { mutableStateOf(false) }
+    LaunchedEffect(
+        key1 = stateOpenFeed,
+        block = {
+            showFeedView = stateOpenFeed != null
+        },
+    )
     NiaBackground {
         NiaGradientBackground(
             gradientColors = if (shouldShowGradientBackground) {
@@ -118,8 +129,6 @@ fun PodcastApp(
                     )
                 }
             }
-            val sheetState = rememberModalBottomSheetState()
-            var showBottomSheet by remember { mutableStateOf(false) }
 
             val unreadDestinations by appState.topLevelDestinationsWithUnreadResources.collectAsStateWithLifecycle()
 
@@ -197,15 +206,13 @@ fun PodcastApp(
                 }
             }
 
-            if (showBottomSheet) {
-                ModalBottomSheet(
+            if (showFeedView) {
+                OnlineFeedView(
                     onDismissRequest = {
-                        showBottomSheet = false
+                        showFeedView = false
                     },
-                    sheetState = sheetState,
-                ) {
-
-                }
+                    feedUrl = stateOpenFeed!!,
+                )
             }
         }
     }

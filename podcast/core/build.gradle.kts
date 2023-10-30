@@ -23,17 +23,22 @@ android {
 }
 
 dependencies {
-    implementation(projects.podcast.model)
+    api(projects.podcast.model)
     implementation(projects.podcast.event)
     implementation(projects.podcast.net.common)
     implementation(projects.podcast.net.download)
     implementation(projects.podcast.net.ssl)
     implementation(projects.podcast.storage.database)
+    api(projects.podcast.parser.feed)
+    implementation(projects.podcast.storage.preferences)
 
     implementation(libs.okhttp)
     implementation(libs.okhttp.urlconnection)
     implementation(libs.okio)
     implementation(libs.androidx.annotation)
     implementation(libs.androidx.appcompat)
+    implementation(libs.apache.common)
+    implementation(libs.commons.io)
+    implementation(libs.jsoup)
 
 }

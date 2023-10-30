@@ -16,8 +16,15 @@
 
 package com.podcast.player.navigation
 
+import android.os.Bundle
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.core.net.toUri
+import androidx.navigation.NavController
+import androidx.navigation.NavDeepLinkRequest
+import androidx.navigation.NavDestination
+import androidx.navigation.NavOptions
+import androidx.navigation.Navigator
 import androidx.navigation.compose.NavHost
 import com.podcast.player.feature.explore.exploreScreen
 import com.podcast.player.feature.foryou.forYouNavigationRoute
@@ -47,7 +54,9 @@ fun PodcastNavHost(
     ) {
         forYouScreen()
         exploreScreen(
-            onTopicClick = {},
+            onTopicClick = {
+                appState.openFeedView(it)
+            },
             onShowSnackbar = onShowSnackbar,
         )
         libraryGraph(
@@ -59,5 +68,27 @@ fun PodcastNavHost(
                 )*/
             },
         )
+    }
+}
+
+
+fun NavController.navigate(
+    route: String,
+    args: Bundle,
+    navOptions: NavOptions? = null,
+    navigatorExtras: Navigator.Extras? = null
+) {
+    val routeLink = NavDeepLinkRequest
+        .Builder
+        .fromUri(NavDestination.createRoute(route).toUri())
+        .build()
+
+    val deepLinkMatch = graph.matchDeepLink(routeLink)
+    if (deepLinkMatch != null) {
+        val destination = deepLinkMatch.destination
+        val id = destination.id
+        navigate(id, args, navOptions, navigatorExtras)
+    } else {
+        navigate(route, navOptions, navigatorExtras)
     }
 }

@@ -77,14 +77,16 @@ import com.podcast.player.ui.component.PodArtworkImage
 @Composable
 fun ExploreRouter(
     viewModel: ExploreViewModel = hiltViewModel(),
+    onClick: (feedUrl: String) -> Unit
 ) {
-    ExploreScreen(viewModel = viewModel)
+    ExploreScreen(viewModel = viewModel, onClick = onClick)
 }
 
 @Composable
 private fun ExploreScreen(
     modifier: Modifier = Modifier,
     viewModel: ExploreViewModel,
+    onClick: (feedUrl: String) -> Unit
 ) {
 
     val stateUI by viewModel.uiState.collectAsStateWithLifecycle()
@@ -114,6 +116,7 @@ private fun ExploreScreen(
                     placeable.place(0, 0)
                 }
             },
+            onClick = onClick
         )
     }
 }
@@ -122,6 +125,7 @@ private fun ExploreScreen(
 fun LazyStaggeredGridScope.discoveryFeed(
     stateUI: ExploreUiState,
     modifier: Modifier,
+    onClick: (feedUrl: String) -> Unit
 ) {
     item(span = StaggeredGridItemSpan.FullLine, contentType = "discovery") {
         Column(modifier = modifier) {
@@ -142,7 +146,7 @@ fun LazyStaggeredGridScope.discoveryFeed(
                 }
             }
 
-            Discovery(stateUI)
+            Discovery(stateUI, onClick)
         }
 
     }
@@ -151,6 +155,7 @@ fun LazyStaggeredGridScope.discoveryFeed(
 @Composable
 fun Discovery(
     stateUI: ExploreUiState,
+    onClick: (feedUrl: String) -> Unit
 ) {
     val lazyGridState = rememberLazyGridState()
     Box(
@@ -199,9 +204,7 @@ fun Discovery(
                         items(items = stateUI.discovers, key = PodcastSearchResult::title) { discover ->
                             DiscoverItem(
                                 discovers = discover,
-                                onClick = {
-
-                                },
+                                onClick = onClick,
                             )
                         }
                     }
@@ -244,10 +247,12 @@ fun Discovery(
 @Composable
 private fun DiscoverItem(
     discovers: PodcastSearchResult,
-    onClick: () -> Unit,
+    onClick: (feedUrl: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    PodCard(modifier = modifier, onClick = onClick) {
+    PodCard(modifier = modifier, onClick = {
+        onClick.invoke(discovers.feedUrl)
+    }) {
         PodArtworkImage(
             modifier = Modifier.aspectRatio(1f),
             artworkUri = Uri.parse(discovers.imageUrl),

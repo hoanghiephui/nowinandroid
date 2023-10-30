@@ -16,23 +16,16 @@
 
 plugins {
     id("nowinandroid.android.library")
-    kotlin("kapt")
 }
 
 android {
-    namespace = "com.podcast.net.discovery"
+    namespace = "com.podcast.storage.preferences"
 }
 
 dependencies {
     implementation(projects.podcast.model)
-    implementation(projects.podcast.net.sync.model)
-    implementation(projects.podcast.core)
-    implementation(projects.podcast.net.sync.gpoddernet)
     implementation(libs.androidx.annotation)
-    implementation("com.github.mfietz:fyydlin:v0.5.0")
-    implementation(libs.rxjava2.rxjava)
-    implementation(libs.rxjava2.rxandroid)
-    implementation(libs.okhttp.logging)
-    implementation(libs.kotlinx.coroutines.android)
+    implementation("androidx.preference:preference:1.2.1")
+
 
 }

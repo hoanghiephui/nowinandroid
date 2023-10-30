@@ -38,6 +38,8 @@ dependencies {
     implementation(projects.core.designsystem)
     implementation(projects.podcast.core)
     implementation(projects.podcast.coreDomain)
+    implementation(projects.podcast.net.common)
+    implementation(projects.podcast.net.download)
 
 
     implementation(libs.androidx.constraintlayout.compose)
