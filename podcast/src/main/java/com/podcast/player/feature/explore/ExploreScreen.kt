@@ -51,6 +51,9 @@ import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.layout
@@ -62,22 +65,21 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.samples.apps.nowinandroid.core.designsystem.component.NiaButton
-import com.google.samples.apps.nowinandroid.core.designsystem.component.NiaOutlinedButton
 import com.google.samples.apps.nowinandroid.core.designsystem.component.NiaOverlayLoadingWheel
 import com.google.samples.apps.nowinandroid.core.designsystem.component.PodCard
 import com.google.samples.apps.nowinandroid.core.designsystem.component.SingleLineText
-import com.google.samples.apps.nowinandroid.core.designsystem.component.scrollbar.scrollbarState
 import com.google.samples.apps.nowinandroid.core.designsystem.icon.NiaIcons
-import com.podcast.net.discovery.PodcastSearchResult
 import com.podcast.core.R
+import com.podcast.net.discovery.PodcastSearchResult
 import com.podcast.player.feature.explore.ExploreUiState.Loading
 import com.podcast.player.feature.explore.ExploreUiState.Success
+import com.podcast.player.feature.feedview.OnlineFeedView
 import com.podcast.player.ui.component.PodArtworkImage
 
 @Composable
 fun ExploreRouter(
     viewModel: ExploreViewModel = hiltViewModel(),
-    onClick: (feedUrl: String) -> Unit
+    onClick: (feedUrl: String) -> Unit,
 ) {
     ExploreScreen(viewModel = viewModel, onClick = onClick)
 }
@@ -86,15 +88,14 @@ fun ExploreRouter(
 private fun ExploreScreen(
     modifier: Modifier = Modifier,
     viewModel: ExploreViewModel,
-    onClick: (feedUrl: String) -> Unit
+    onClick: (feedUrl: String) -> Unit,
 ) {
 
     val stateUI by viewModel.uiState.collectAsStateWithLifecycle()
 
     val state = rememberLazyStaggeredGridState()
-    val scrollbarState = state.scrollbarState(
-        itemsAvailable = 1,
-    )
+    var showFeedView by remember { mutableStateOf(false) }
+    var stateOpenFeed by remember { mutableStateOf<String?>(null) }
     LazyVerticalStaggeredGrid(
         columns = Adaptive(300.dp),
         contentPadding = PaddingValues(16.dp),
@@ -116,16 +117,27 @@ private fun ExploreScreen(
                     placeable.place(0, 0)
                 }
             },
-            onClick = onClick
+            onClick = {
+                stateOpenFeed = it
+                showFeedView = true
+            },
+        )
+    }
+    if (showFeedView && stateOpenFeed != null) {
+        OnlineFeedView(
+            onDismissRequest = {
+                stateOpenFeed = null
+                showFeedView = false
+            },
+            feedUrl = stateOpenFeed!!,
         )
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 fun LazyStaggeredGridScope.discoveryFeed(
     stateUI: ExploreUiState,
     modifier: Modifier,
-    onClick: (feedUrl: String) -> Unit
+    onClick: (feedUrl: String) -> Unit,
 ) {
     item(span = StaggeredGridItemSpan.FullLine, contentType = "discovery") {
         Column(modifier = modifier) {
@@ -133,7 +145,7 @@ fun LazyStaggeredGridScope.discoveryFeed(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 SingleLineText(
                     text = stringResource(id = R.string.discover),
@@ -155,7 +167,7 @@ fun LazyStaggeredGridScope.discoveryFeed(
 @Composable
 fun Discovery(
     stateUI: ExploreUiState,
-    onClick: (feedUrl: String) -> Unit
+    onClick: (feedUrl: String) -> Unit,
 ) {
     val lazyGridState = rememberLazyGridState()
     Box(
@@ -196,12 +208,15 @@ fun Discovery(
                             .heightIn(
                                 max = max(
                                     160.dp,
-                                    with(LocalDensity.current) { 160.sp.toDp() }
-                                )
+                                    with(LocalDensity.current) { 160.sp.toDp() },
+                                ),
                             )
                             .fillMaxWidth(),
                     ) {
-                        items(items = stateUI.discovers, key = PodcastSearchResult::title) { discover ->
+                        items(
+                            items = stateUI.discovers,
+                            key = PodcastSearchResult::title,
+                        ) { discover ->
                             DiscoverItem(
                                 discovers = discover,
                                 onClick = onClick,
@@ -213,12 +228,11 @@ fun Discovery(
                         SingleLineText(
                             text = stringResource(id = R.string.discover_powered_by_itunes),
                             style = MaterialTheme.typography.labelSmall,
-                            modifier = Modifier.padding(end = 8.dp)
+                            modifier = Modifier.padding(end = 8.dp),
                         )
                     }
 
                 }
-
             }
         }
         AnimatedVisibility(
@@ -250,9 +264,12 @@ private fun DiscoverItem(
     onClick: (feedUrl: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    PodCard(modifier = modifier, onClick = {
-        onClick.invoke(discovers.feedUrl)
-    }) {
+    PodCard(
+        modifier = modifier,
+        onClick = {
+            onClick.invoke(discovers.feedUrl)
+        },
+    ) {
         PodArtworkImage(
             modifier = Modifier.aspectRatio(1f),
             artworkUri = Uri.parse(discovers.imageUrl),

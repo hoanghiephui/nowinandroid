@@ -26,7 +26,9 @@ import com.podcast.core.service.download.DownloadRequestCreator
 import com.podcast.core.service.download.Downloader
 import com.podcast.core.service.download.HttpDownloader
 import com.podcast.core.storage.DBReader
+import com.podcast.core.util.DownloadErrorLabel
 import com.podcast.core.util.syndication.FeedDiscoverer
+import com.podcast.model.download.DownloadError.ERROR_UNAUTHORIZED
 import com.podcast.model.download.DownloadResult
 import com.podcast.model.feed.Feed
 import com.podcast.net.common.UrlChecker
@@ -39,8 +41,14 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.IOException
@@ -57,6 +65,26 @@ class OnlineFeedViewModel @Inject constructor(
     private var downloader: Downloader? = null
 
     private var feeds: List<Feed>? = null
+
+    private val _uiState = MutableStateFlow<OnlineFeedUiState>(OnlineFeedUiState.Loading)
+    val uiState = _uiState.asStateFlow().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = OnlineFeedUiState.Loading,
+    )
+
+    fun onClear() {
+        viewModelScope.launch {
+            _uiState.emit(OnlineFeedUiState.Loading)
+        }
+        downloader?.cancel()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        downloader?.cancel()
+    }
+
     fun lookupUrlAndDownload(url: String) {
         viewModelScope.launch(ioDispatcher) {
             PodcastSearcherRegistry.lookupUrl(url).collect {
@@ -85,6 +113,14 @@ class OnlineFeedViewModel @Inject constructor(
     private fun checkDownloadResult(status: DownloadResult, destination: String) {
         if (status.isSuccessful) {
             parseFeed(destination)
+        } else if (status.reason == ERROR_UNAUTHORIZED) {
+            viewModelScope.launch {
+                _uiState.emit(OnlineFeedUiState.ErrorAunauthorized(username, passpword))
+            }
+        } else {
+            viewModelScope.launch {
+                _uiState.emit(OnlineFeedUiState.Error(DownloadErrorLabel.from(status.reason)))
+            }
         }
     }
 
@@ -134,7 +170,9 @@ class OnlineFeedViewModel @Inject constructor(
     }
 
     private fun showFeedInformation(feed: Feed, alternateFeedUrls: Map<String, String>) {
-        Log.d("AAA", feed.feedTitle)
+        viewModelScope.launch {
+            _uiState.emit(OnlineFeedUiState.Success(feed, alternateFeedUrls))
+        }
     }
 
     private fun showFeedDiscoveryDialog(feedFile: File, baseUrl: String): Boolean {

@@ -103,7 +103,7 @@ fun PodcastApp(
     val stateOpenFeed by viewModel.stateOpenFeed.collectAsStateWithLifecycle()
     var showFeedView by remember { mutableStateOf(false) }
     LaunchedEffect(
-        key1 = stateOpenFeed,
+        key1 = showFeedView,
         block = {
             showFeedView = stateOpenFeed != null
         },
@@ -204,15 +204,6 @@ fun PodcastApp(
                         modifier = Modifier.testTag("NiaBottomBar"),
                     )
                 }
-            }
-
-            if (showFeedView) {
-                OnlineFeedView(
-                    onDismissRequest = {
-                        showFeedView = false
-                    },
-                    feedUrl = stateOpenFeed!!,
-                )
             }
         }
     }

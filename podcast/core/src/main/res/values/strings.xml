@@ -10,6 +10,7 @@
     <string name="statistics_label">Statistics</string>
     <string name="add_feed_label">Add podcast</string>
     <string name="episodes_label">Episodes</string>
+    <string name="episode_label">%1$s Episodes</string>
     <string name="home_label">Home</string>
     <string name="queue_label">Queue</string>
     <string name="inbox_label">Inbox</string>
